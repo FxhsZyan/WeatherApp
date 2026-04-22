@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:WeatherApp.ViewModels"
+             x:Class="WeatherApp.MainPage"
+             BackgroundColor="Transparent">
+
+    <ContentPage.BindingContext>
+        <viewmodels:MainViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto, Auto, *, Auto, Auto">
+
+        <!-- Background Image -->
+        <Image Source="weather_bg_day.png"
+               Aspect="AspectFill"
+               Grid.RowSpan="5" />
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Padding="20" Spacing="5">
+            <Label Text="{Binding CityName}"
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center" />
+            <Label Text="{Binding CurrentDate, StringFormat='{0:D}'}"
+                   FontSize="16"
+                   TextColor="White"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- Search Bar -->
+        <Frame Grid.Row="1"
+               Margin="20,0"
+               Padding="10"
+               BackgroundColor="#80FFFFFF"
+               CornerRadius="30"
+               HasShadow="False">
+            <Grid ColumnDefinitions="*, Auto">
+                <Entry Grid.Column="0"
+                       Placeholder="Search city..."
+                       PlaceholderColor="#AAFFFFFF"
+                       TextColor="White"
+                       Text="{Binding SearchText}"
+                       ReturnCommand="{Binding SearchCommand}"
+                       BackgroundColor="Transparent"
+                       VerticalOptions="Center" />
+                <Button Grid.Column="1"
+                        Text="🔍"
+                        Command="{Binding SearchCommand}"
+                        BackgroundColor="Transparent"
+                        TextColor="White"
+                        FontSize="18"
+                        Padding="5" />
+            </Grid>
+        </Frame>
+
+        <!-- Error Message -->
+        <Label Grid.Row="1"
+               Text="{Binding ErrorMessage}"
+               TextColor="Red"
+               FontSize="13"
+               HorizontalOptions="Center"
+               Margin="0,60,0,0"
+               IsVisible="{Binding ErrorMessage, Converter={x:StaticResource NullToBoolConverter}}" />
+
+        <!-- Current Weather -->
+        <VerticalStackLayout Grid.Row="2" VerticalOptions="Center" Spacing="10">
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="White"
+                               HorizontalOptions="Center" />
+            <Image Source="{Binding CurrentIcon}"
+                   HeightRequest="150"
+                   WidthRequest="150"
+                   HorizontalOptions="Center" />
+            <Label Text="{Binding CurrentTemp}"
+                   FontSize="80"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center" />
+            <Label Text="{Binding CurrentCondition}"
+                   FontSize="24"
+                   TextColor="White"
+                   HorizontalOptions="Center" />
+        </VerticalStackLayout>
+
+        <!-- 7-Day Forecast -->
+        <Frame Grid.Row="3"
+               Margin="20,0"
+               Padding="10"
+               BackgroundColor="#80FFFFFF"
+               CornerRadius="20"
+               HasShadow="False">
+            <CollectionView ItemsSource="{Binding Forecast}" HeightRequest="180">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="8" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*, Auto, Auto" Padding="10">
+                            <Label Grid.Column="0" Text="{Binding Date}" VerticalOptions="Center" />
+                            <Image Grid.Column="1" Source="{Binding Icon}" HeightRequest="30" WidthRequest="30" Margin="10,0" />
+                            <Label Grid.Column="2" VerticalOptions="Center">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding TempMax, StringFormat='{0}°'}" FontAttributes="Bold" />
+                                        <Span Text=" / " />
+                                        <Span Text="{Binding TempMin, StringFormat='{0}°'}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Frame>
+
+        <!-- Details Button -->
+        <Button Grid.Row="4"
+                Text="View Details →"
+                Margin="20,10"
+                BackgroundColor="#50FFFFFF"
+                TextColor="White"
+                FontAttributes="Bold"
+                CornerRadius="20"
+                Command="{Binding GoToDetailsCommand}" />
+
+    </Grid>
+</ContentPage>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:WeatherApp.ViewModels"
+             x:Class="WeatherApp.Views.DetailsPage"
+             BackgroundColor="Transparent">
+
+    <Grid RowDefinitions="Auto, *, Auto">
+
+        <!-- Background -->
+        <Image Source="weather_bg_day.png"
+               Aspect="AspectFill"
+               Grid.RowSpan="3" />
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Padding="20,40,20,10" Spacing="5">
+            <Label Text="{Binding CityName}"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center" />
+            <Label Text="Weather Details"
+                   FontSize="16"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   Opacity="0.8" />
+        </VerticalStackLayout>
+
+        <!-- Loading Indicator -->
+        <ActivityIndicator Grid.Row="1"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="White"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center" />
+
+        <!-- 4 Stat Cards -->
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*, *"
+              RowDefinitions="*, *"
+              Padding="20"
+              ColumnSpacing="15"
+              RowSpacing="15"
+              VerticalOptions="Center">
+
+            <!-- Wind -->
+            <Frame Grid.Row="0" Grid.Column="0"
+                   BackgroundColor="#50FFFFFF"
+                   CornerRadius="20"
+                   Padding="20"
+                   HasShadow="False">
+                <VerticalStackLayout Spacing="10" VerticalOptions="Center">
+                    <Image Source="weather_icon_wind.png"
+                           HeightRequest="50"
+                           WidthRequest="50"
+                           HorizontalOptions="Center" />
+                    <Label Text="Wind"
+                           TextColor="White"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           Opacity="0.8" />
+                    <Label Text="{Binding WindSpeed}"
+                           TextColor="White"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Humidity -->
+            <Frame Grid.Row="0" Grid.Column="1"
+                   BackgroundColor="#50FFFFFF"
+                   CornerRadius="20"
+                   Padding="20"
+                   HasShadow="False">
+                <VerticalStackLayout Spacing="10" VerticalOptions="Center">
+                    <Image Source="weather_icon_humidity.png"
+                           HeightRequest="50"
+                           WidthRequest="50"
+                           HorizontalOptions="Center" />
+                    <Label Text="Humidity"
+                           TextColor="White"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           Opacity="0.8" />
+                    <Label Text="{Binding Humidity}"
+                           TextColor="White"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Visibility -->
+            <Frame Grid.Row="1" Grid.Column="0"
+                   BackgroundColor="#50FFFFFF"
+                   CornerRadius="20"
+                   Padding="20"
+                   HasShadow="False">
+                <VerticalStackLayout Spacing="10" VerticalOptions="Center">
+                    <Image Source="weather_icon_visibility.png"
+                           HeightRequest="50"
+                           WidthRequest="50"
+                           HorizontalOptions="Center" />
+                    <Label Text="Visibility"
+                           TextColor="White"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           Opacity="0.8" />
+                    <Label Text="{Binding Visibility}"
+                           TextColor="White"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- UV Index -->
+            <Frame Grid.Row="1" Grid.Column="1"
+                   BackgroundColor="#50FFFFFF"
+                   CornerRadius="20"
+                   Padding="20"
+                   HasShadow="False">
+                <VerticalStackLayout Spacing="10" VerticalOptions="Center">
+                    <Image Source="weather_icon_uv.png"
+                           HeightRequest="50"
+                           WidthRequest="50"
+                           HorizontalOptions="Center" />
+                    <Label Text="UV Index"
+                           TextColor="White"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           Opacity="0.8" />
+                    <Label Text="{Binding UVIndex}"
+                           TextColor="White"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </Grid>
+
+        <!-- Back Button -->
+        <Button Grid.Row="2"
+                Text="← Back"
+                Margin="20"
+                BackgroundColor="#50FFFFFF"
+                TextColor="White"
+                CornerRadius="20"
+                Command="{Binding GoBackCommand}" />
+
+    </Grid>
+</ContentPage>
