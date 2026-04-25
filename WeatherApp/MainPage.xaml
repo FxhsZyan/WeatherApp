@@ -21,11 +21,11 @@
             <Label Text="{Binding CityName}"
                    FontSize="32"
                    FontAttributes="Bold"
-                   TextColor="White"
+                   TextColor="#3A6EA5"
                    HorizontalOptions="Center" />
             <Label Text="{Binding CurrentDate, StringFormat='{0:D}'}"
                    FontSize="16"
-                   TextColor="White"
+                   TextColor="#3A6EA5"
                    HorizontalOptions="Center" />
         </VerticalStackLayout>
 
@@ -39,8 +39,8 @@
             <Grid ColumnDefinitions="*, Auto">
                 <Entry Grid.Column="0"
                        Placeholder="Search city..."
-                       PlaceholderColor="#AAFFFFFF"
-                       TextColor="White"
+                       PlaceholderColor="#7A9EC5"
+                       TextColor="#3A6EA5"
                        Text="{Binding SearchText}"
                        ReturnCommand="{Binding SearchCommand}"
                        BackgroundColor="Transparent"
@@ -49,7 +49,7 @@
                         Text="🔍"
                         Command="{Binding SearchCommand}"
                         BackgroundColor="Transparent"
-                        TextColor="White"
+                        TextColor="#3A6EA5"
                         FontSize="18"
                         Padding="5" />
             </Grid>
@@ -77,11 +77,11 @@
             <Label Text="{Binding CurrentTemp}"
                    FontSize="80"
                    FontAttributes="Bold"
-                   TextColor="White"
+                   TextColor="#3A6EA5"
                    HorizontalOptions="Center" />
             <Label Text="{Binding CurrentCondition}"
                    FontSize="24"
-                   TextColor="White"
+                   TextColor="#3A6EA5"
                    HorizontalOptions="Center" />
         </VerticalStackLayout>
 
@@ -121,7 +121,7 @@
                 Text="View Details →"
                 Margin="20,10"
                 BackgroundColor="#50FFFFFF"
-                TextColor="White"
+                TextColor="#3A6EA5"
                 FontAttributes="Bold"
                 CornerRadius="20"
                 Command="{Binding GoToDetailsCommand}" />

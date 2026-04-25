@@ -42,7 +42,7 @@ namespace WeatherApp.Services
         public async Task<WeatherDetails> GetWeatherDetailsAsync(double latitude, double longitude, string cityName)
         {
             string url = $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}" +
-                         $"&hourly=relativehumidity_2m,visibility,uv_index&current_weather=true&timezone=auto";
+             $"&hourly=relativehumidity_2m,visibility,uv_index&daily=uv_index_max&current_weather=true&timezone=auto&forecast_days=1";
             try
             {
                 var response = await _httpClient.GetFromJsonAsync<DetailedWeatherResponse>(url);
@@ -57,8 +57,9 @@ namespace WeatherApp.Services
                         ? response.Hourly.Humidity[0] : 0,
                     Visibility = response.Hourly.Visibility != null && response.Hourly.Visibility.Length > 0
                         ? Math.Round(response.Hourly.Visibility[0] / 1000, 1) : 0,
-                    UVIndex = response.Hourly.UVIndex != null && response.Hourly.UVIndex.Length > 0
-                        ? (int)response.Hourly.UVIndex[0] : 0
+                    // NEW
+                    UVIndex = response.Hourly.UVIndex != null && response.Hourly.UVIndex.Length > 1
+                    ? (int)response.Hourly.UVIndex[1] : 0,
                 };
             }
             catch { return null; }

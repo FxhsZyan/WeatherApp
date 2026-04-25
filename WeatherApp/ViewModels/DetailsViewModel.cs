@@ -20,6 +20,7 @@ namespace WeatherApp.ViewModels
         public DetailsViewModel()
         {
             _weatherService = new WeatherService();
+            GoBackCommand = new Command(async () => await GoBackAsync());
         }
 
         public string CityName
@@ -56,6 +57,13 @@ namespace WeatherApp.ViewModels
         {
             get => _isBusy;
             set { _isBusy = value; OnPropertyChanged(); }
+        }
+
+        public Command GoBackCommand { get; }
+
+        private async Task GoBackAsync()
+        {
+            await Application.Current.MainPage.Navigation.PopAsync();
         }
 
         public async Task LoadDetailsAsync(double latitude, double longitude, string cityName)

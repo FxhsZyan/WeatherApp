@@ -17,11 +17,11 @@
             <Label Text="{Binding CityName}"
                    FontSize="28"
                    FontAttributes="Bold"
-                   TextColor="White"
+                   TextColor="#3A6EA5"
                    HorizontalOptions="Center" />
             <Label Text="Weather Details"
                    FontSize="16"
-                   TextColor="White"
+                   TextColor="#3A6EA5"
                    HorizontalOptions="Center"
                    Opacity="0.8" />
         </VerticalStackLayout>
@@ -55,12 +55,12 @@
                            WidthRequest="50"
                            HorizontalOptions="Center" />
                     <Label Text="Wind"
-                           TextColor="White"
+                           TextColor="#3A6EA5"
                            FontSize="14"
                            HorizontalOptions="Center"
                            Opacity="0.8" />
                     <Label Text="{Binding WindSpeed}"
-                           TextColor="White"
+                           TextColor="#3A6EA5"
                            FontSize="22"
                            FontAttributes="Bold"
                            HorizontalOptions="Center" />
@@ -79,12 +79,12 @@
                            WidthRequest="50"
                            HorizontalOptions="Center" />
                     <Label Text="Humidity"
-                           TextColor="White"
+                           TextColor="#3A6EA5"
                            FontSize="14"
                            HorizontalOptions="Center"
                            Opacity="0.8" />
                     <Label Text="{Binding Humidity}"
-                           TextColor="White"
+                           TextColor="#3A6EA5"
                            FontSize="22"
                            FontAttributes="Bold"
                            HorizontalOptions="Center" />
@@ -103,12 +103,12 @@
                            WidthRequest="50"
                            HorizontalOptions="Center" />
                     <Label Text="Visibility"
-                           TextColor="White"
+                           TextColor="#3A6EA5"
                            FontSize="14"
                            HorizontalOptions="Center"
                            Opacity="0.8" />
                     <Label Text="{Binding Visibility}"
-                           TextColor="White"
+                           TextColor="#3A6EA5"
                            FontSize="22"
                            FontAttributes="Bold"
                            HorizontalOptions="Center" />
@@ -127,12 +127,12 @@
                            WidthRequest="50"
                            HorizontalOptions="Center" />
                     <Label Text="UV Index"
-                           TextColor="White"
+                           TextColor="#3A6EA5"
                            FontSize="14"
                            HorizontalOptions="Center"
                            Opacity="0.8" />
                     <Label Text="{Binding UVIndex}"
-                           TextColor="White"
+                           TextColor="#3A6EA5"
                            FontSize="22"
                            FontAttributes="Bold"
                            HorizontalOptions="Center" />
@@ -146,7 +146,7 @@
                 Text="← Back"
                 Margin="20"
                 BackgroundColor="#50FFFFFF"
-                TextColor="White"
+                TextColor="#3A6EA5"
                 CornerRadius="20"
                 Command="{Binding GoBackCommand}" />
 
