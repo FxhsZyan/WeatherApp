@@ -42,7 +42,7 @@ namespace WeatherApp.Services
         public async Task<WeatherDetails> GetWeatherDetailsAsync(double latitude, double longitude, string cityName)
         {
             string url = $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}" +
-             $"&hourly=relativehumidity_2m,visibility,uv_index&daily=uv_index_max&current_weather=true&timezone=auto&forecast_days=1";
+                $"&hourly=relativehumidity_2m,visibility,uv_index&daily=uv_index_max&current_weather=true&timezone=auto&forecast_days=1";
             try
             {
                 var response = await _httpClient.GetFromJsonAsync<DetailedWeatherResponse>(url);
@@ -52,14 +52,12 @@ namespace WeatherApp.Services
                 {
                     CityName = cityName,
                     WindSpeed = response.CurrentWeather.WindSpeed,
-                    // Take first hour values as "current"
                     Humidity = response.Hourly.Humidity != null && response.Hourly.Humidity.Length > 0
                         ? response.Hourly.Humidity[0] : 0,
                     Visibility = response.Hourly.Visibility != null && response.Hourly.Visibility.Length > 0
                         ? Math.Round(response.Hourly.Visibility[0] / 1000, 1) : 0,
-                    // NEW
-                    UVIndex = response.Hourly.UVIndex != null && response.Hourly.UVIndex.Length > 1
-                    ? (int)response.Hourly.UVIndex[1] : 0,
+                    UVIndex = response.Daily?.UVIndexMax != null && response.Daily.UVIndexMax.Length > 0
+                        ? (int)Math.Round(response.Daily.UVIndexMax[0]) : 0,
                 };
             }
             catch { return null; }
@@ -92,7 +90,6 @@ namespace WeatherApp.Services
         }
     }
 
-    // Geocoding models
     public class GeocodingResponse
     {
         [JsonPropertyName("results")]
@@ -114,7 +111,6 @@ namespace WeatherApp.Services
         public double Longitude { get; set; }
     }
 
-    // Detailed weather response models
     public class DetailedWeatherResponse
     {
         [JsonPropertyName("current_weather")]
@@ -122,6 +118,9 @@ namespace WeatherApp.Services
 
         [JsonPropertyName("hourly")]
         public HourlyDetails Hourly { get; set; }
+
+        [JsonPropertyName("daily")]
+        public DailyDetails Daily { get; set; }
     }
 
     public class HourlyDetails
@@ -134,5 +133,11 @@ namespace WeatherApp.Services
 
         [JsonPropertyName("uv_index")]
         public double[] UVIndex { get; set; }
+    }
+
+    public class DailyDetails
+    {
+        [JsonPropertyName("uv_index_max")]
+        public double[] UVIndexMax { get; set; }
     }
 }
