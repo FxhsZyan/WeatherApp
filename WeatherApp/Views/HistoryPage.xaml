@@ -35,16 +35,16 @@
                         HorizontalOptions="End"
                         Padding="15,8"/>
 
-                <!-- Empty state -->
-                <Label Text="No search history yet. Start searching for cities!"
-                       FontSize="16"
-                       TextColor="White"
-                       HorizontalOptions="Center"
-                       HorizontalTextAlignment="Center"
-                       Margin="20"/>
-
                 <!-- History list -->
                 <CollectionView ItemsSource="{Binding History}">
+                    <CollectionView.EmptyView>
+                        <Label Text="No search history yet. Start searching for cities!"
+                            FontSize="16"
+                            TextColor="White"
+                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            Margin="20"/>
+                    </CollectionView.EmptyView>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:SearchHistory">
                             <Frame Margin="0,5"
