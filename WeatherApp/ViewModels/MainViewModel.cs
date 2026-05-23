@@ -4,34 +4,77 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using WeatherApp.Models;
 using WeatherApp.Services;
-using WeatherApp.Views;
+using Microsoft.Maui.ApplicationModel;
 
 namespace WeatherApp.ViewModels
 {
+    [QueryProperty(nameof(IncomingLat), "lat")]
+    [QueryProperty(nameof(IncomingLon), "lon")]
+    [QueryProperty(nameof(IncomingCity), "city")]
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly WeatherService _weatherService;
+        private readonly DatabaseService _databaseService;
+
         private string _cityName = "New York";
         private string _currentTemp;
         private string _currentCondition;
         private string _currentIcon;
-        private bool _isBusy;
         private string _searchText;
-        private string _errorMessage;
+        private bool _isBusy;
+        private bool _isFavorite;
         private double _currentLat = 40.7128;
         private double _currentLon = -74.0060;
 
+
+
         public event PropertyChangedEventHandler PropertyChanged;
+
+
 
         public MainViewModel()
         {
             _weatherService = new WeatherService();
+            _databaseService = new DatabaseService();
             Forecast = new ObservableCollection<ForecastItem>();
-            RefreshCommand = new Command(async () => await LoadWeatherDataAsync(_currentLat, _currentLon, _cityName));
-            SearchCommand = new Command(async () => await SearchCityAsync());
-            GoToDetailsCommand = new Command(async () => await GoToDetailsAsync());
 
-            Task.Run(async () => await LoadWeatherDataAsync(_currentLat, _currentLon, "New York"));
+            RefreshCommand = new Command(async () => await LoadWeatherDataAsync(_currentLat, _currentLon));
+            SearchCommand = new Command(async () => await SearchCityAsync());
+            ToggleFavoriteCommand = new Command(async () => await ToggleFavoriteAsync());
+            ViewDetailsCommand = new Command(async () => await ViewDetailsAsync());
+
+            Task.Run(async () => await LoadWeatherDataAsync(_currentLat, _currentLon));
+        }
+
+        public string IncomingLat
+        {
+            set
+            {
+                if (double.TryParse(value, out double lat))
+                    _currentLat = lat;
+            }
+        }
+
+        public string IncomingLon
+        {
+            set
+            {
+                if (double.TryParse(value, out double lon))
+                    _currentLon = lon;
+            }
+        }
+
+        public string IncomingCity
+        {
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    CityName = Uri.UnescapeDataString(value);
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                        await LoadWeatherDataAsync(_currentLat, _currentLon));
+                }
+            }
         }
 
         public string CityName
@@ -58,22 +101,22 @@ namespace WeatherApp.ViewModels
             set { _currentIcon = value; OnPropertyChanged(); }
         }
 
-        public bool IsBusy
-        {
-            get => _isBusy;
-            set { _isBusy = value; OnPropertyChanged(); }
-        }
-
         public string SearchText
         {
             get => _searchText;
             set { _searchText = value; OnPropertyChanged(); }
         }
 
-        public string ErrorMessage
+        public bool IsBusy
         {
-            get => _errorMessage;
-            set { _errorMessage = value; OnPropertyChanged(); }
+            get => _isBusy;
+            set { _isBusy = value; OnPropertyChanged(); }
+        }
+
+        public bool IsFavorite
+        {
+            get => _isFavorite;
+            set { _isFavorite = value; OnPropertyChanged(); }
         }
 
         public DateTime CurrentDate { get; } = DateTime.Now;
@@ -82,40 +125,49 @@ namespace WeatherApp.ViewModels
 
         public ICommand RefreshCommand { get; }
         public ICommand SearchCommand { get; }
-        public ICommand GoToDetailsCommand { get; }
+        public ICommand ToggleFavoriteCommand { get; }
+        public ICommand ViewDetailsCommand { get; }
 
         private async Task SearchCityAsync()
         {
             if (string.IsNullOrWhiteSpace(SearchText)) return;
 
-            IsBusy = true;
-            ErrorMessage = null;
-
             var result = await _weatherService.GetCityCoordinatesAsync(SearchText);
-
             if (result == null)
             {
-                ErrorMessage = $"City \"{SearchText}\" not found. Try again.";
-                IsBusy = false;
+                await Application.Current.MainPage.DisplayAlert("Not Found", $"Could not find city: {SearchText}", "OK");
                 return;
             }
 
-            var (lat, lon, cityName) = result.Value;
-            _currentLat = lat;
-            _currentLon = lon;
-            await LoadWeatherDataAsync(lat, lon, cityName);
+            _currentLat = result.Value.lat;
+            _currentLon = result.Value.lon;
+            CityName = result.Value.cityName;
+            SearchText = string.Empty;
+
+            await LoadWeatherDataAsync(_currentLat, _currentLon);
+
+            // Save to history
+            await _databaseService.AddHistoryAsync(new SearchHistory
+            {
+                CityName = CityName,
+                Latitude = _currentLat,
+                Longitude = _currentLon,
+                SearchedAt = DateTime.Now
+            });
+
+            // Check if already favorite
+            IsFavorite = await _databaseService.IsFavoriteAsync(CityName);
         }
 
-        private async Task LoadWeatherDataAsync(double latitude, double longitude, string cityName)
+        private async Task LoadWeatherDataAsync(double lat, double lon)
         {
+            if (IsBusy) return;
             IsBusy = true;
-
             try
             {
-                var weather = await _weatherService.GetWeatherAsync(latitude, longitude);
+                var weather = await _weatherService.GetWeatherAsync(lat, lon);
                 if (weather != null)
                 {
-                    CityName = cityName;
                     CurrentTemp = $"{weather.CurrentWeather.Temperature}°C";
                     CurrentCondition = _weatherService.GetWeatherCondition(weather.CurrentWeather.WeatherCode);
                     CurrentIcon = _weatherService.GetWeatherIcon(weather.CurrentWeather.WeatherCode);
@@ -133,22 +185,52 @@ namespace WeatherApp.ViewModels
                         });
                     }
                 }
+
+                IsFavorite = await _databaseService.IsFavoriteAsync(CityName);
             }
-            finally
+            finally { IsBusy = false; }
+        }
+
+        private async Task ToggleFavoriteAsync()
+        {
+            if (IsFavorite)
             {
-                IsBusy = false;
+                // Remove from favorites
+                var favorites = await _databaseService.GetFavoritesAsync();
+                var existing = favorites.FirstOrDefault(f => f.CityName == CityName);
+                if (existing != null)
+                    await _databaseService.DeleteFavoriteAsync(existing);
+                IsFavorite = false;
+            }
+            else
+            {
+                // Add to favorites
+                string label = await Application.Current.MainPage.DisplayPromptAsync(
+                    "Add to Favorites",
+                    "Enter a label for this city:",
+                    initialValue: CityName,
+                    placeholder: "e.g. Home, School, Office");
+
+                if (string.IsNullOrWhiteSpace(label)) return;
+
+                await _databaseService.AddFavoriteAsync(new FavoriteCity
+                {
+                    CityName = CityName,
+                    Latitude = _currentLat,
+                    Longitude = _currentLon,
+                    Label = label,
+                    DateAdded = DateTime.Now
+                });
+                IsFavorite = true;
             }
         }
 
-        private async Task GoToDetailsAsync()
+        private async Task ViewDetailsAsync()
         {
-            await Application.Current.MainPage.Navigation.PushAsync(
-                new DetailsPage(_currentLat, _currentLon, _cityName));
+            await Shell.Current.GoToAsync($"DetailsPage?lat={_currentLat}&lon={_currentLon}&city={Uri.EscapeDataString(CityName)}");
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

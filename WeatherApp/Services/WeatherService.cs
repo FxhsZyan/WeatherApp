@@ -135,7 +135,7 @@ namespace WeatherApp.Services
         public double[] UVIndex { get; set; }
     }
 
-    public class DailyDetails
+    public class DailyDetails   
     {
         [JsonPropertyName("uv_index_max")]
         public double[] UVIndexMax { get; set; }

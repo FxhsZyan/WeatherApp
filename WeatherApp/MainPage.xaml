@@ -2,8 +2,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:WeatherApp.ViewModels"
+             xmlns:converters="clr-namespace:WeatherApp.Converters"
              x:Class="WeatherApp.MainPage"
              BackgroundColor="Transparent">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:NullToBoolConverter x:Key="NullToBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ContentPage.BindingContext>
         <viewmodels:MainViewModel />
@@ -17,16 +24,27 @@
                Grid.RowSpan="5" />
 
         <!-- Header -->
+        <!-- Header -->
         <VerticalStackLayout Grid.Row="0" Padding="20" Spacing="5">
-            <Label Text="{Binding CityName}"
-                   FontSize="32"
-                   FontAttributes="Bold"
-                   TextColor="#3A6EA5"
-                   HorizontalOptions="Center" />
+            <Grid ColumnDefinitions="*, Auto">
+                <Label Grid.Column="0"
+               Text="{Binding CityName}"
+               FontSize="32"
+               FontAttributes="Bold"
+               TextColor="White"
+               HorizontalOptions="Center" />
+                <Button Grid.Column="1"
+                Text="♥"
+                TextColor="{Binding IsFavorite, Converter={StaticResource NullToBoolConverter}}"    
+                FontSize="24"
+                BackgroundColor="Transparent"
+                Command="{Binding ToggleFavoriteCommand}"
+                VerticalOptions="Center"/>
+            </Grid>
             <Label Text="{Binding CurrentDate, StringFormat='{0:D}'}"
-                   FontSize="16"
-                   TextColor="#3A6EA5"
-                   HorizontalOptions="Center" />
+           FontSize="16"
+           TextColor="White"
+           HorizontalOptions="Center" />
         </VerticalStackLayout>
 
         <!-- Search Bar -->
@@ -118,13 +136,13 @@
 
         <!-- Details Button -->
         <Button Grid.Row="4"
-                Text="View Details →"
+                Text="View Details"
                 Margin="20,10"
                 BackgroundColor="#50FFFFFF"
                 TextColor="#3A6EA5"
                 FontAttributes="Bold"
                 CornerRadius="20"
-                Command="{Binding GoToDetailsCommand}" />
+                Command="{Binding ViewDetailsCommand}" />
 
     </Grid>
 </ContentPage>

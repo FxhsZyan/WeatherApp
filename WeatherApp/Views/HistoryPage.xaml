@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:WeatherApp.ViewModels"
+             xmlns:models="clr-namespace:WeatherApp.Models"
+             x:Class="WeatherApp.Views.HistoryPage"
+             Title="Search History">
+
+    <ContentPage.BindingContext>
+        <viewmodels:HistoryViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="*, Auto">
+
+        <!-- Background -->
+        <Image Source="weather_bg_day.png" Aspect="AspectFill" Grid.RowSpan="2" />
+
+        <!-- Content -->
+        <ScrollView Grid.Row="0" Padding="20">
+            <VerticalStackLayout Spacing="15">
+
+                <Label Text="Search History"
+                       FontSize="28"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       Margin="0,20,0,0"/>
+
+                <!-- Clear all button -->
+                <Button Text="Clear All"
+                        BackgroundColor="#FF0000"
+                        TextColor="White"
+                        CornerRadius="10"
+                        Command="{Binding ClearHistoryCommand}"
+                        HorizontalOptions="End"
+                        Padding="15,8"/>
+
+                <!-- Empty state -->
+                <Label Text="No search history yet. Start searching for cities!"
+                       FontSize="16"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       Margin="20"/>
+
+                <!-- History list -->
+                <CollectionView ItemsSource="{Binding History}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:SearchHistory">
+                            <Frame Margin="0,5"
+                                   Padding="15"
+                                   BackgroundColor="#80FFFFFF"
+                                   CornerRadius="15"
+                                   HasShadow="False">
+                                <Grid ColumnDefinitions="*, Auto">
+
+                                    <!-- City info -->
+                                    <VerticalStackLayout Grid.Column="0"
+                                                         VerticalOptions="Center">
+                                        <Label Text="{Binding CityName}"
+                                               FontSize="18"
+                                               FontAttributes="Bold"
+                                               TextColor="#1a1a2e"/>
+                                        <Label Text="{Binding SearchedAt, StringFormat='Searched: {0:MMM d, yyyy h:mm tt}'}"
+                                               FontSize="12"
+                                               TextColor="#888"/>
+                                    </VerticalStackLayout>
+
+                                    <!-- Delete button -->
+                                    <Button Grid.Column="1"
+                                            Text="🗑️"
+                                            FontSize="18"
+                                            BackgroundColor="Transparent"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HistoryViewModel}}, Path=DeleteHistoryItemCommand}"
+                                            CommandParameter="{Binding .}"
+                                            VerticalOptions="Center"/>
+
+                                </Grid>
+
+                                <!-- Tap to load city -->
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HistoryViewModel}}, Path=SelectHistoryItemCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

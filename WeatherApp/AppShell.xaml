@@ -5,8 +5,30 @@
        xmlns:views="clr-namespace:WeatherApp.Views"
        x:Class="WeatherApp.AppShell">
 
-    <ShellContent
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <Shell.Resources>
+        <Style TargetType="TabBar">
+            <Setter Property="Shell.TabBarBackgroundColor" Value="White" />
+            <Setter Property="Shell.TabBarForegroundColor" Value="#1a1a2e" />
+            <Setter Property="Shell.TabBarTitleColor" Value="#1a1a2e" />
+            <Setter Property="Shell.TabBarUnselectedColor" Value="#888888" />
+        </Style>
+    </Shell.Resources>
+
+    <TabBar>
+        <Tab Title="Weather" Icon="weather_icon_sunny.png">
+            <ShellContent Route="MainPage"
+                          ContentTemplate="{DataTemplate local:MainPage}" />
+        </Tab>
+
+        <Tab Title="Favorites" Icon="weather_icon_cloudy.png">
+            <ShellContent Route="FavoritesPage"
+                          ContentTemplate="{DataTemplate views:FavoritesPage}" />
+        </Tab>
+
+        <Tab Title="History" Icon="weather_icon_rainy.png">
+            <ShellContent Route="HistoryPage"
+                          ContentTemplate="{DataTemplate views:HistoryPage}" />
+        </Tab>
+    </TabBar>
 
 </Shell>
