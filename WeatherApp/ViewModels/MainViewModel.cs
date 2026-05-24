@@ -6,6 +6,7 @@ using WeatherApp.Models;
 using WeatherApp.Services;
 using Microsoft.Maui.ApplicationModel;
 
+
 namespace WeatherApp.ViewModels
 {
     [QueryProperty(nameof(IncomingLat), "lat")]
@@ -37,13 +38,14 @@ namespace WeatherApp.ViewModels
             _weatherService = new WeatherService();
             _databaseService = new DatabaseService();
             Forecast = new ObservableCollection<ForecastItem>();
+            HourlyForecast = new ObservableCollection<HourlyForecastItem>();
 
             RefreshCommand = new Command(async () => await LoadWeatherDataAsync(_currentLat, _currentLon));
             SearchCommand = new Command(async () => await SearchCityAsync());
             ToggleFavoriteCommand = new Command(async () => await ToggleFavoriteAsync());
             ViewDetailsCommand = new Command(async () => await ViewDetailsAsync());
 
-            Task.Run(async () => await LoadWeatherDataAsync(_currentLat, _currentLon));
+            Task.Run(async () => await LoadLastCityOrDefaultAsync());
         }
 
         public string IncomingLat
@@ -123,6 +125,8 @@ namespace WeatherApp.ViewModels
 
         public ObservableCollection<ForecastItem> Forecast { get; }
 
+        public ObservableCollection<HourlyForecastItem> HourlyForecast { get; }
+
         public ICommand RefreshCommand { get; }
         public ICommand SearchCommand { get; }
         public ICommand ToggleFavoriteCommand { get; }
@@ -143,6 +147,11 @@ namespace WeatherApp.ViewModels
             _currentLon = result.Value.lon;
             CityName = result.Value.cityName;
             SearchText = string.Empty;
+            // Save last searched city
+            Preferences.Set("last_city", CityName);
+            Preferences.Set("last_lat", _currentLat);
+            Preferences.Set("last_lon", _currentLon);
+            Preferences.Set("last_city_name", CityName);
 
             await LoadWeatherDataAsync(_currentLat, _currentLon);
 
@@ -172,6 +181,7 @@ namespace WeatherApp.ViewModels
                     CurrentCondition = _weatherService.GetWeatherCondition(weather.CurrentWeather.WeatherCode);
                     CurrentIcon = _weatherService.GetWeatherIcon(weather.CurrentWeather.WeatherCode);
 
+                    // 7-day forecast
                     Forecast.Clear();
                     for (int i = 0; i < weather.Daily.Time.Length; i++)
                     {
@@ -183,6 +193,28 @@ namespace WeatherApp.ViewModels
                             WeatherCondition = _weatherService.GetWeatherCondition(weather.Daily.WeatherCode[i]),
                             Icon = _weatherService.GetWeatherIcon(weather.Daily.WeatherCode[i])
                         });
+                    }
+
+                    // Hourly forecast — show next 8 hours from current hour
+                    HourlyForecast.Clear();
+                    if (weather.Hourly != null)
+                    {
+                        var now = DateTime.Now;
+                        int count = 0;
+                        for (int i = 0; i < weather.Hourly.Time.Length && count < 8; i++)
+                        {
+                            var hour = DateTime.Parse(weather.Hourly.Time[i]);
+                            if (hour < now.AddMinutes(-30)) continue;
+
+                            HourlyForecast.Add(new HourlyForecastItem
+                            {
+                                Time = count == 0 ? "Now" : hour.ToString("h tt"),
+                                Temperature = $"{weather.Hourly.Temperature[i]}°",
+                                Icon = _weatherService.GetWeatherIcon(weather.Hourly.WeatherCode[i]),
+                                IsCurrentHour = count == 0
+                            });
+                            count++;
+                        }
                     }
                 }
 
@@ -225,6 +257,19 @@ namespace WeatherApp.ViewModels
             }
         }
 
+        private async Task LoadLastCityOrDefaultAsync()
+        {
+            var lastCity = Preferences.Get("last_city", "");
+            var lastLat = Preferences.Get("last_lat", 40.7128);
+            var lastLon = Preferences.Get("last_lon", -74.0060);
+            var lastCityName = Preferences.Get("last_city_name", "New York");
+
+            _currentLat = lastLat;
+            _currentLon = lastLon;
+            CityName = lastCityName;
+
+            await LoadWeatherDataAsync(_currentLat, _currentLon);
+        }
         private async Task ViewDetailsAsync()
         {
             await Shell.Current.GoToAsync($"DetailsPage?lat={_currentLat}&lon={_currentLon}&city={Uri.EscapeDataString(CityName)}");

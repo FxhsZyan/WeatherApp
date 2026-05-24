@@ -16,12 +16,12 @@
         <viewmodels:MainViewModel />
     </ContentPage.BindingContext>
 
-    <Grid RowDefinitions="Auto, Auto, *, Auto, Auto">
+    <Grid RowDefinitions="Auto, Auto, *, Auto, Auto, Auto">
 
         <!-- Background Image -->
         <Image Source="weather_bg_day.png"
                Aspect="AspectFill"
-               Grid.RowSpan="5" />
+               Grid.RowSpan="6" />
 
         <!-- Row 0: Header -->
         <VerticalStackLayout Grid.Row="0" Padding="20,20,20,5" Spacing="3">
@@ -76,34 +76,82 @@
         </Frame>
 
         <!-- Row 2: Current Weather -->
-        <VerticalStackLayout Grid.Row="2" VerticalOptions="Center" Spacing="5">
+        <VerticalStackLayout Grid.Row="2" VerticalOptions="Center" Spacing="2">
             <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               Color="White"
-                               HorizontalOptions="Center" />
+                       IsVisible="{Binding IsBusy}"
+                       Color="White"
+                       HorizontalOptions="Center" />
             <Image Source="{Binding CurrentIcon}"
-                   HeightRequest="150"
-                   WidthRequest="150"
-                   HorizontalOptions="Center" />
+           HeightRequest="90"
+           WidthRequest="90"
+           HorizontalOptions="Center" />
             <Label Text="{Binding CurrentTemp}"
-                   FontSize="70"
-                   FontAttributes="Bold"
-                   TextColor="#3A6EA5"
-                   HorizontalOptions="Center" />
+           FontSize="55"
+           FontAttributes="Bold"
+           TextColor="#3A6EA5"
+           HorizontalOptions="Center" />
             <Label Text="{Binding CurrentCondition}"
-                   FontSize="24"
-                   TextColor="#3A6EA5"
-                   HorizontalOptions="Center" />
+           FontSize="18"
+           TextColor="#3A6EA5"
+           HorizontalOptions="Center" />
         </VerticalStackLayout>
 
-        <!-- Row 3: 7-Day Forecast -->
+        <!-- Row 3: Hourly Forecast Strip -->
         <Frame Grid.Row="3"
-               Margin="20,15,20,0"
+               Margin="20,10,20,0"
                Padding="10"
                BackgroundColor="#80FFFFFF"
                CornerRadius="20"
                HasShadow="False">
-            <CollectionView ItemsSource="{Binding Forecast}" HeightRequest="180">
+            <VerticalStackLayout Spacing="5">
+                <Label Text="Today's Forecast"
+                       FontSize="13"
+                       FontAttributes="Bold"
+                       TextColor="#1a1a2e"
+                       Margin="5,0,0,0"/>
+                <CollectionView ItemsSource="{Binding HourlyForecast}"
+                                HeightRequest="90">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="5" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Padding="8"
+                                   CornerRadius="15"
+                                   HasShadow="False"
+                                   BackgroundColor="#60FFFFFF"
+                                   WidthRequest="65">
+                                <VerticalStackLayout Spacing="3" HorizontalOptions="Center">
+                                    <Label Text="{Binding Time}"
+                                           FontSize="11"
+                                           TextColor="#1a1a2e"
+                                           HorizontalOptions="Center"
+                                           FontAttributes="Bold"/>
+                                    <Image Source="{Binding Icon}"
+                                           HeightRequest="28"
+                                           WidthRequest="28"
+                                           HorizontalOptions="Center"/>
+                                    <Label Text="{Binding Temperature}"
+                                           FontSize="13"
+                                           TextColor="#3A6EA5"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"/>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Row 4: 7-Day Forecast -->
+        <Frame Grid.Row="4"
+               Margin="20,10,20,0"
+               Padding="10"
+               BackgroundColor="#80FFFFFF"
+               CornerRadius="20"
+               HasShadow="False">
+            <CollectionView ItemsSource="{Binding Forecast}" HeightRequest="160">
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="8" />
                 </CollectionView.ItemsLayout>
@@ -137,8 +185,8 @@
             </CollectionView>
         </Frame>
 
-        <!-- Row 4: View Details Button -->
-        <Button Grid.Row="4"
+        <!-- Row 5: View Details Button -->
+        <Button Grid.Row="5"
                 Text="View Details"
                 Margin="20,10"
                 BackgroundColor="#50FFFFFF"

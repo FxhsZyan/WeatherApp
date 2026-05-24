@@ -15,6 +15,9 @@ namespace WeatherApp.Models
 
         [JsonPropertyName("daily")]
         public DailyWeather Daily { get; set; }
+
+        [JsonPropertyName("hourly")]
+        public HourlyWeather Hourly { get; set; }
     }
 
     public class CurrentWeather
@@ -57,5 +60,24 @@ namespace WeatherApp.Models
         public double TempMin { get; set; }
         public string WeatherCondition { get; set; }
         public string Icon { get; set; }
+    }
+    public class HourlyWeather
+    {
+        [JsonPropertyName("time")]
+        public string[] Time { get; set; }
+
+        [JsonPropertyName("temperature_2m")]
+        public double[] Temperature { get; set; }
+
+        [JsonPropertyName("weathercode")]
+        public int[] WeatherCode { get; set; }
+    }
+
+    public class HourlyForecastItem
+    {
+        public string Time { get; set; }
+        public string Temperature { get; set; }
+        public string Icon { get; set; }
+        public bool IsCurrentHour { get; set; }
     }
 }

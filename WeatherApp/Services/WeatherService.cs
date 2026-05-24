@@ -31,7 +31,13 @@ namespace WeatherApp.Services
 
         public async Task<WeatherResponse> GetWeatherAsync(double latitude, double longitude)
         {
-            string url = $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto";
+            string url = $"https://api.open-meteo.com/v1/forecast" +
+                $"?latitude={latitude}&longitude={longitude}" +
+                $"&current_weather=true" +
+                $"&daily=weathercode,temperature_2m_max,temperature_2m_min" +
+                $"&hourly=temperature_2m,weathercode" +
+                $"&timezone=auto" +
+                $"&forecast_days=7";
             try
             {
                 return await _httpClient.GetFromJsonAsync<WeatherResponse>(url);
