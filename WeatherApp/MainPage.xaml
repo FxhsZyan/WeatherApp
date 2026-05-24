@@ -105,7 +105,7 @@
 
         <!-- 7-Day Forecast -->
         <Frame Grid.Row="3"
-               Margin="20,0"
+               Margin="20,15,20,0"
                Padding="10"
                BackgroundColor="#80FFFFFF"
                CornerRadius="20"
@@ -117,14 +117,14 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Grid ColumnDefinitions="*, Auto, Auto" Padding="10">
-                            <Label Grid.Column="0" Text="{Binding Date}" VerticalOptions="Center" />
+                            <Label Grid.Column="0" Text="{Binding Date}" VerticalOptions="Center" TextColor="#1a1a2e" />
                             <Image Grid.Column="1" Source="{Binding Icon}" HeightRequest="30" WidthRequest="30" Margin="10,0" />
                             <Label Grid.Column="2" VerticalOptions="Center">
                                 <Label.FormattedText>
                                     <FormattedString>
-                                        <Span Text="{Binding TempMax, StringFormat='{0}°'}" FontAttributes="Bold" />
-                                        <Span Text=" / " />
-                                        <Span Text="{Binding TempMin, StringFormat='{0}°'}" />
+                                        <Span Text="{Binding TempMax, StringFormat='{0}°'}" FontAttributes="Bold" TextColor="#1a1a2e" />
+                                        <Span Text=" / " TextColor="#1a1a2e" />
+                                        <Span Text="{Binding TempMin, StringFormat='{0}°'}" TextColor="#1a1a2e" />
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
