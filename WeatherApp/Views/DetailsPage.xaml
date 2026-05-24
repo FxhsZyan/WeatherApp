@@ -13,17 +13,18 @@
                Grid.RowSpan="3" />
 
         <!-- Header -->
-        <VerticalStackLayout Grid.Row="0" Padding="20,40,20,10" Spacing="5">
+        <VerticalStackLayout Grid.Row="0" HorizontalOptions="Center" Spacing="2" Margin="0,20,0,0">
             <Label Text="{Binding CityName}"
-                   FontSize="28"
-                   FontAttributes="Bold"
-                   TextColor="#3A6EA5"
-                   HorizontalOptions="Center" />
+           FontSize="28"
+           FontAttributes="Bold"
+           TextColor="White"
+           HorizontalOptions="Center"
+           HorizontalTextAlignment="Center"/>
             <Label Text="Weather Details"
-                   FontSize="16"
-                   TextColor="#3A6EA5"
-                   HorizontalOptions="Center"
-                   Opacity="0.8" />
+           FontSize="14"
+           TextColor="White"
+           HorizontalOptions="Center"
+           Opacity="0.8"/>
         </VerticalStackLayout>
 
         <!-- Loading Indicator -->
