@@ -1,6 +1,6 @@
 # WeatherApp 🌤️
 
-A mobile weather application built with .NET MAUI for Windows, developed as a final project for a Mobile Development course.
+A mobile weather application built with .NET MAUI, developed as a final project for a Mobile Development course.
 
 ## 👥 Authors
 
@@ -12,9 +12,9 @@ A mobile weather application built with .NET MAUI for Windows, developed as a fi
 
 ## 📖 About
 
-WeatherApp is a cross-platform mobile application that provides real-time weather information for any city in the world. Built using .NET MAUI and C#, the app fetches live data from the Open-Meteo API and displays current conditions, a 7-day forecast, and detailed weather metrics.
+WeatherApp is a cross-platform mobile application that provides real-time weather information for any city in the world. Built using .NET MAUI and C#, the app fetches live data from the Open-Meteo API and displays current conditions, hourly forecasts, a 7-day forecast, and detailed weather metrics.
 
-This project was built as our final requirement for our Mobile Development course, with the goal of applying concepts such as MVVM architecture, API integration, data binding, and multi-page navigation in a real-world mobile application.
+This project was built as a final requirement for a Mobile Development course, with the goal of applying concepts such as MVVM architecture, API integration, SQLite local storage, data binding, and multi-page navigation in a real-world mobile application.
 
 ---
 
@@ -22,19 +22,24 @@ This project was built as our final requirement for our Mobile Development cours
 
 - 🔍 **City Search** — Search any city in the world by name
 - 🌡️ **Current Weather** — Displays real-time temperature and weather condition
+- ⏱️ **Hourly Forecast** — Shows the next 8 hours of weather from the current time
 - 📅 **7-Day Forecast** — Shows daily high and low temperatures for the week ahead
 - 💨 **Weather Details Page** — View wind speed, humidity, visibility, and UV index
+- ⭐ **Favorites** — Save cities with a custom label and load them with one tap
+- 🕓 **Search History** — Automatically tracks the last 20 searched cities
 - 🖼️ **Weather Icons** — Custom icons for different weather conditions
 - 📱 **Clean UI** — Frosted glass-style cards with a sky gradient background
+- 💾 **Persistent Storage** — Last searched city is remembered between app sessions
 
 ---
 
 ## 🛠️ Built With
 
-- [.NET MAUI](https://learn.microsoft.com/en-us/dotnet/maui/) — Cross-platform UI framework
+- [.NET MAUI](https://learn.microsoft.com/en-us/dotnet/maui/) — Cross-platform UI framework (net10.0)
 - [C#](https://learn.microsoft.com/en-us/dotnet/csharp/) — Primary programming language
-- [Open-Meteo API](https://open-meteo.com/) — Free weather forecast API
+- [Open-Meteo API](https://open-meteo.com/) — Free weather forecast API (no key required)
 - [Open-Meteo Geocoding API](https://open-meteo.com/en/docs/geocoding-api) — City name to coordinates lookup
+- [SQLite-net-pcl](https://github.com/praeclarum/sqlite-net) — Local database for favorites and history
 - Visual Studio 2022
 
 ---
@@ -46,29 +51,48 @@ WeatherApp/
 ├── Converters/
 │   └── NullToBoolConverter.cs
 ├── Models/
+│   ├── FavoriteCity.cs
+│   ├── SearchHistory.cs
 │   ├── WeatherData.cs
 │   └── WeatherDetails.cs
 ├── Services/
-│   └── WeatherService.cs
+│   ├── WeatherService.cs
+│   └── DatabaseService.cs
 ├── ViewModels/
 │   ├── MainViewModel.cs
-│   └── DetailsViewModel.cs
+│   ├── DetailsViewModel.cs
+│   ├── FavoritesViewModel.cs
+│   ├── HistoryViewModel.cs
+│   └── OnboardingViewModel.cs
 ├── Views/
-│   └── DetailsPage.xaml
+│   ├── DetailsPage.xaml
+│   ├── FavoritesPage.xaml
+│   ├── HistoryPage.xaml
+│   ├── HelpPage.xaml
+│   └── OnboardingPage.xaml
 ├── Resources/
-│   └── Images/
-│       ├── weather_bg_day.png
-│       ├── weather_icon_sunny.png
-│       ├── weather_icon_cloudy.png
-│       ├── weather_icon_rainy.png
-│       ├── weather_icon_wind.png
-│       ├── weather_icon_humidity.png
-│       ├── weather_icon_visibility.png
-│       └── weather_icon_uv.png
+│   ├── AppIcon/
+│   │   ├── appicon.png
+│   │   └── appiconfg.svg
+│   ├── Images/
+│   │   ├── weather_bg_day.png
+│   │   ├── weather_icon_sunny.png
+│   │   ├── weather_icon_cloudy.png
+│   │   ├── weather_icon_rainy.png
+│   │   ├── weather_icon_wind.png
+│   │   ├── weather_icon_humidity.png
+│   │   ├── weather_icon_visibility.png
+│   │   └── weather_icon_uv.png
+│   ├── Fonts/
+│   │   ├── OpenSans-Regular.ttf
+│   │   └── OpenSans-Semibold.ttf
+│   └── Splash/
+│       └── splash.svg
 ├── MainPage.xaml
 ├── AppShell.xaml
 ├── App.xaml
-└── MauiProgram.cs
+├── MauiProgram.cs
+└── WeatherApp.csproj
 ```
 
 ---
@@ -78,8 +102,8 @@ WeatherApp/
 ### Prerequisites
 
 - Visual Studio 2022 with the **.NET MAUI** workload installed
-- .NET 8.0 SDK or later
-- Windows 10/11
+- .NET 10.0 SDK
+- Android SDK (for Android deployment) or Windows 10/11
 
 ### Running the App
 
@@ -87,8 +111,8 @@ WeatherApp/
    ```
    git clone https://github.com/your-username/WeatherApp.git
    ```
-2. Open `WeatherApp.sln` in Visual Studio 2022
-3. Set the run target to **Windows Machine**
+2. Open `WeatherApp.slnx` in Visual Studio 2022
+3. Set the run target to **Android Emulator**, **Android Device**, or **Windows Machine**
 4. Press **F5** to build and run
 
 > No API key required — the app uses the free [Open-Meteo API](https://open-meteo.com/).
@@ -97,12 +121,35 @@ WeatherApp/
 
 ## 📡 API Reference
 
-This app uses the following free, no-auth APIs:
-
 | API | Purpose |
 |---|---|
-| `api.open-meteo.com/v1/forecast` | Current weather + 7-day forecast |
-| `geocoding-api.open-meteo.com/v1/search` | City name to coordinates |
+| `api.open-meteo.com/v1/forecast` | Current weather, hourly forecast, and 7-day forecast |
+| `geocoding-api.open-meteo.com/v1/search` | City name to coordinates lookup |
+
+---
+
+## 🔧 Build Fixes Applied
+
+### App Icon Mismatch (APT2260 / APT2067)
+
+The original project had a mismatch between the icon filename referenced in `WeatherApp.csproj` and the actual file in `Resources/AppIcon/`. This caused Android build errors `APT2260` and a cascading `APT2067` manifest processing failure.
+
+**Fix applied:**
+
+1. Renamed `appicon_clean.png` to `appicon.png` in `Resources/AppIcon/`
+2. Updated `WeatherApp.csproj` to match:
+
+```xml
+<!-- BEFORE -->
+<MauiIcon Include="Resources\AppIcon\appicon_clean.png" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+
+<!-- AFTER -->
+<MauiIcon Include="Resources\AppIcon\appicon.png" Color="#512BD4" />
+```
+
+3. Removed the `ForegroundFile` attribute to prevent the `.NET` logo SVG from being layered on top of the custom app icon.
+
+After applying these changes, do a **Build → Clean Solution** followed by **Build → Rebuild Solution** to clear any cached mipmap artifacts.
 
 ---
 
