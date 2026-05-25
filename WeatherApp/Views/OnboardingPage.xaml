@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WeatherApp.Views.OnboardingPage"
+             NavigationPage.HasNavigationBar="False"
+             BackgroundColor="Transparent">
+
+    <Grid>
+
+        <!-- Background -->
+        <Image Source="weather_bg_day.png"
+               Aspect="AspectFill" />
+
+        <!-- Semi-transparent overlay -->
+        <BoxView BackgroundColor="#CC1a1a2e" />
+
+        <Grid RowDefinitions="*, Auto, Auto"
+              Padding="0,60,0,40">
+
+            <!-- Carousel / Slide Content -->
+            <CarouselView x:Name="OnboardingCarousel"
+                          Grid.Row="0"
+                          ItemsSource="{Binding Slides}"
+                          IndicatorView="PageIndicator"
+                          CurrentItemChanged="OnCurrentItemChanged"
+                          IsSwipeEnabled="True"
+                          Loop="False">
+                <CarouselView.ItemTemplate>
+                    <DataTemplate>
+                        <VerticalStackLayout Spacing="20"
+                                             Padding="40,0"
+                                             VerticalOptions="Center"
+                                             HorizontalOptions="Center">
+
+                            <!-- Icon -->
+                            <Image Source="{Binding Icon}"
+                                   HeightRequest="120"
+                                   WidthRequest="120"
+                                   HorizontalOptions="Center" />
+
+                            <!-- Title -->
+                            <Label Text="{Binding Title}"
+                                   FontSize="30"
+                                   FontAttributes="Bold"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+
+                            <!-- Description -->
+                            <Label Text="{Binding Description}"
+                                   FontSize="16"
+                                   TextColor="#CCFFFFFF"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap" />
+
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+
+            <!-- Dot Indicators -->
+            <IndicatorView x:Name="PageIndicator"
+                           Grid.Row="1"
+                           HorizontalOptions="Center"
+                           IndicatorColor="#66FFFFFF"
+                           SelectedIndicatorColor="White"
+                           IndicatorSize="10"
+                           Margin="0,10" />
+
+            <!-- Navigation Buttons -->
+            <Grid Grid.Row="2"
+                  ColumnDefinitions="Auto, *, Auto"
+                  Padding="30,0">
+
+                <!-- Skip -->
+                <Button x:Name="SkipButton"
+                        Grid.Column="0"
+                        Text="Skip"
+                        TextColor="#AAFFFFFF"
+                        BackgroundColor="Transparent"
+                        FontSize="16"
+                        Clicked="OnSkipClicked"
+                        VerticalOptions="Center" />
+
+                <!-- Next / Get Started -->
+                <Button x:Name="NextButton"
+                        Grid.Column="2"
+                        Text="Next →"
+                        TextColor="White"
+                        BackgroundColor="#3A6EA5"
+                        CornerRadius="25"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        Padding="25,12"
+                        Clicked="OnNextClicked"
+                        VerticalOptions="Center" />
+
+            </Grid>
+
+        </Grid>
+
+    </Grid>
+
+</ContentPage>

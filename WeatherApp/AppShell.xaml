@@ -29,6 +29,11 @@
             <ShellContent Route="HistoryPage"
                           ContentTemplate="{DataTemplate views:HistoryPage}" />
         </Tab>
+
+        <Tab Title="Help" Icon="weather_icon_visibility.png">
+            <ShellContent Route="HelpPage"
+                          ContentTemplate="{DataTemplate views:HelpPage}" />
+        </Tab>
     </TabBar>
 
 </Shell>

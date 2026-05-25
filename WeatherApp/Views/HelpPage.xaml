@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WeatherApp.Views.HelpPage"
+             Title="Help">
+
+    <Grid>
+
+        <Image Source="weather_bg_day.png" Aspect="AspectFill" />
+        <BoxView BackgroundColor="#E61a1a2e" />
+
+        <ScrollView Padding="20,0">
+            <VerticalStackLayout Spacing="20" Padding="0,30,0,40">
+
+                <Label Text="Help &amp; Guide"
+                       FontSize="32"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       Margin="0,0,0,10" />
+
+                <!-- Row 1 -->
+                <Grid ColumnDefinitions="*, 16, *" RowDefinitions="Auto">
+
+                    <!-- Current Weather -->
+                    <Border Grid.Column="0"
+                            BackgroundColor="#F0FFFFFF"
+                            StrokeThickness="0"
+                            Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16" />
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Image Source="weather_icon_sunny.png"
+                                   HeightRequest="48" WidthRequest="48"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Current weather"
+                                   FontSize="15" FontAttributes="Bold"
+                                   TextColor="#1a1a2e"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Search any city for live conditions and today's hourly forecast"
+                                   FontSize="13" TextColor="#555555"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 7-Day Forecast -->
+                    <Border Grid.Column="2"
+                            BackgroundColor="#F0FFFFFF"
+                            StrokeThickness="0"
+                            Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16" />
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Image Source="weather_icon_cloudy.png"
+                                   HeightRequest="48" WidthRequest="48"
+                                   HorizontalOptions="Center" />
+                            <Label Text="7-day forecast"
+                                   FontSize="15" FontAttributes="Bold"
+                                   TextColor="#1a1a2e"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Plan ahead with a full week of high and low temperature outlooks"
+                                   FontSize="13" TextColor="#555555"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                </Grid>
+
+                <!-- Row 2 -->
+                <Grid ColumnDefinitions="*, 16, *" RowDefinitions="Auto">
+
+                    <!-- Favorites -->
+                    <Border Grid.Column="0"
+                            BackgroundColor="#F0FFFFFF"
+                            StrokeThickness="0"
+                            Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16" />
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Image Source="weather_icon_wind.png"
+                                   HeightRequest="48" WidthRequest="48"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Favorites"
+                                   FontSize="15" FontAttributes="Bold"
+                                   TextColor="#1a1a2e"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Tap ♥ to save cities you visit often and open them in one tap"
+                                   FontSize="13" TextColor="#555555"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Search History -->
+                    <Border Grid.Column="2"
+                            BackgroundColor="#F0FFFFFF"
+                            StrokeThickness="0"
+                            Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16" />
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Image Source="weather_icon_rainy.png"
+                                   HeightRequest="48" WidthRequest="48"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Search history"
+                                   FontSize="15" FontAttributes="Bold"
+                                   TextColor="#1a1a2e"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Every city you search is saved so you can revisit without retyping"
+                                   FontSize="13" TextColor="#555555"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                </Grid>
+
+                <!-- Row 3 -->
+                <Grid ColumnDefinitions="*, 16, *" RowDefinitions="Auto">
+
+                    <!-- Detailed Insights -->
+                    <Border Grid.Column="0"
+                            BackgroundColor="#F0FFFFFF"
+                            StrokeThickness="0"
+                            Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16" />
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Image Source="weather_icon_uv.png"
+                                   HeightRequest="48" WidthRequest="48"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Detailed insights"
+                                   FontSize="15" FontAttributes="Bold"
+                                   TextColor="#1a1a2e"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Dig into UV index, humidity, wind speed, and visibility data"
+                                   FontSize="13" TextColor="#555555"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Help -->
+                    <Border Grid.Column="2"
+                            BackgroundColor="#F0FFFFFF"
+                            StrokeThickness="0"
+                            Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16" />
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Image Source="weather_icon_visibility.png"
+                                   HeightRequest="48" WidthRequest="48"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Intro tour"
+                                   FontSize="15" FontAttributes="Bold"
+                                   TextColor="#1a1a2e"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Replay the onboarding tour anytime from the button below"
+                                   FontSize="13" TextColor="#555555"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="WordWrap" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                </Grid>
+
+                <!-- Replay Onboarding -->
+                <Button Text="Replay Intro Tour"
+                        BackgroundColor="#3A6EA5"
+                        TextColor="White"
+                        CornerRadius="25"
+                        FontSize="15"
+                        FontAttributes="Bold"
+                        Padding="0,14"
+                        Margin="20,10,20,0"
+                        Clicked="OnReplayOnboardingClicked" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+
+</ContentPage>
