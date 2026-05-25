@@ -128,31 +128,6 @@ WeatherApp/
 
 ---
 
-## 🔧 Build Fixes Applied
-
-### App Icon Mismatch (APT2260 / APT2067)
-
-The original project had a mismatch between the icon filename referenced in `WeatherApp.csproj` and the actual file in `Resources/AppIcon/`. This caused Android build errors `APT2260` and a cascading `APT2067` manifest processing failure.
-
-**Fix applied:**
-
-1. Renamed `appicon_clean.png` to `appicon.png` in `Resources/AppIcon/`
-2. Updated `WeatherApp.csproj` to match:
-
-```xml
-<!-- BEFORE -->
-<MauiIcon Include="Resources\AppIcon\appicon_clean.png" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
-
-<!-- AFTER -->
-<MauiIcon Include="Resources\AppIcon\appicon.png" Color="#512BD4" />
-```
-
-3. Removed the `ForegroundFile` attribute to prevent the `.NET` logo SVG from being layered on top of the custom app icon.
-
-After applying these changes, do a **Build → Clean Solution** followed by **Build → Rebuild Solution** to clear any cached mipmap artifacts.
-
----
-
 ## 📝 License
 
 This project was made for educational purposes as part of a Mobile Development course final project.
