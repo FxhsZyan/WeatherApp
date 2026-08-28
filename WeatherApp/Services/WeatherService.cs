@@ -94,6 +94,59 @@ namespace WeatherApp.Services
                 _ => "weather_icon_cloudy.png"
             };
         }
+
+        public async Task<string> GetAiSummaryAsync(string cityName, string condition, double tempC, int humidity, double windSpeed)
+        {
+            string prompt = $"Weather in {cityName}: {condition}, {tempC}°C, humidity {humidity}%, wind {windSpeed} km/h. " +
+                "In 2 short sentences: (1) describe the day in a friendly tone, (2) give one practical tip (clothing, umbrella, activity, etc). No markdown, no emojis.";
+
+           string url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key={Secrets.GeminiApiKey}";
+
+            var requestBody = new
+            {
+                contents = new[]
+                {
+                    new { parts = new[] { new { text = prompt } } }
+                }
+            };
+
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync(url, requestBody);
+             if (!response.IsSuccessStatusCode) return null;
+
+                var json = await response.Content.ReadFromJsonAsync<GeminiResponse>();
+                return json?.Candidates?.FirstOrDefault()?.Content?.Parts?.FirstOrDefault()?.Text?.Trim();
+            }
+        catch
+{
+    return null;
+}
+        }
+    }
+
+    public class GeminiResponse
+    {
+        [JsonPropertyName("candidates")]
+        public GeminiCandidate[] Candidates { get; set; }
+    }
+
+    public class GeminiCandidate
+    {
+        [JsonPropertyName("content")]
+        public GeminiContent Content { get; set; }
+    }
+
+    public class GeminiContent
+    {
+        [JsonPropertyName("parts")]
+        public GeminiPart[] Parts { get; set; }
+    }
+
+    public class GeminiPart
+    {
+        [JsonPropertyName("text")]
+        public string Text { get; set; }
     }
 
     public class GeocodingResponse

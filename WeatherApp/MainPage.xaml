@@ -16,12 +16,12 @@
         <viewmodels:MainViewModel />
     </ContentPage.BindingContext>
 
-    <Grid RowDefinitions="Auto, Auto, *, Auto, Auto, Auto">
+    <Grid RowDefinitions="Auto, Auto, *, Auto, Auto, Auto, Auto">
 
         <!-- Background Image -->
         <Image Source="weather_bg_day.png"
                Aspect="AspectFill"
-               Grid.RowSpan="6" />
+               Grid.RowSpan="7" />
 
         <!-- Row 0: Header -->
         <VerticalStackLayout Grid.Row="0" Padding="20,20,20,5" Spacing="3">
@@ -96,8 +96,32 @@
            HorizontalOptions="Center" />
         </VerticalStackLayout>
 
-        <!-- Row 3: Hourly Forecast Strip -->
+        <!-- Row 3: AI Weather Summary -->
         <Frame Grid.Row="3"
+               Margin="20,10,20,0"
+               Padding="12"
+               BackgroundColor="#80FFFFFF"
+               CornerRadius="20"
+               HasShadow="False">
+            <VerticalStackLayout Spacing="4">
+                <Label Text="✨ Today's Insight"
+                       FontSize="13"
+                       FontAttributes="Bold"
+                       TextColor="#1a1a2e" />
+                <ActivityIndicator IsRunning="{Binding IsAiSummaryLoading}"
+                                   IsVisible="{Binding IsAiSummaryLoading}"
+                                   Color="#3A6EA5"
+                                   HorizontalOptions="Start" />
+                <Label Text="{Binding AiSummary}"
+                       FontSize="13"
+                       TextColor="#1a1a2e"
+                       IsVisible="{Binding IsBusy, Converter={StaticResource NullToBoolConverter}}"
+                       LineBreakMode="WordWrap" />
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Row 4: Hourly Forecast Strip -->
+        <Frame Grid.Row="4"
                Margin="20,10,20,0"
                Padding="10"
                BackgroundColor="#80FFFFFF"
@@ -144,8 +168,8 @@
             </VerticalStackLayout>
         </Frame>
 
-        <!-- Row 4: 7-Day Forecast -->
-        <Frame Grid.Row="4"
+        <!-- Row 5: 7-Day Forecast -->
+        <Frame Grid.Row="5"
                Margin="20,10,20,0"
                Padding="10"
                BackgroundColor="#80FFFFFF"
@@ -185,8 +209,8 @@
             </CollectionView>
         </Frame>
 
-        <!-- Row 5: View Details Button -->
-        <Button Grid.Row="5"
+        <!-- Row 6: View Details Button -->
+        <Button Grid.Row="6"
                 Text="View Details"
                 Margin="20,10"
                 BackgroundColor="#50FFFFFF"

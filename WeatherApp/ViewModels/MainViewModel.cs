@@ -26,6 +26,8 @@ namespace WeatherApp.ViewModels
         private bool _isFavorite;
         private double _currentLat = 40.7128;
         private double _currentLon = -74.0060;
+        private string _aiSummary;
+        private bool _isAiSummaryLoading;
 
 
 
@@ -119,6 +121,18 @@ namespace WeatherApp.ViewModels
         {
             get => _isFavorite;
             set { _isFavorite = value; OnPropertyChanged(); }
+        }
+
+        public string AiSummary
+        {
+            get => _aiSummary;
+            set { _aiSummary = value; OnPropertyChanged(); }
+        }
+
+        public bool IsAiSummaryLoading
+        {
+            get => _isAiSummaryLoading;
+            set { _isAiSummaryLoading = value; OnPropertyChanged(); }
         }
 
         public DateTime CurrentDate { get; } = DateTime.Now;
@@ -219,8 +233,34 @@ namespace WeatherApp.ViewModels
                 }
 
                 IsFavorite = await _databaseService.IsFavoriteAsync(CityName);
+
+                // Fetch AI-generated summary (don't block weather UI on this)
+                _ = LoadAiSummaryAsync(weather);
             }
             finally { IsBusy = false; }
+        }
+
+        private async Task LoadAiSummaryAsync(WeatherResponse weather)
+        {
+            if (weather == null) return;
+            IsAiSummaryLoading = true;
+            AiSummary = null;
+            try
+            {
+                var details = await _weatherService.GetWeatherDetailsAsync(_currentLat, _currentLon, CityName);
+                string summary = await _weatherService.GetAiSummaryAsync(
+                    CityName,
+                    _weatherService.GetWeatherCondition(weather.CurrentWeather.WeatherCode),
+                    weather.CurrentWeather.Temperature,
+                    details?.Humidity ?? 0,
+                    weather.CurrentWeather.WindSpeed);
+
+                AiSummary = summary ?? "Couldn't generate an AI summary right now.";
+            }
+            finally
+            {
+                IsAiSummaryLoading = false;
+            }
         }
 
         private async Task ToggleFavoriteAsync()
