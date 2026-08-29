@@ -131,3 +131,10 @@ WeatherApp/
 ## 📝 License
 
 This project was made for educational purposes as part of a Mobile Development course final project.
+
+
+## Setup
+This app uses the Gemini API for AI-generated weather summaries.
+1. Copy `Services/Secrets.example.cs` and rename it to `Services/Secrets.cs`
+2. Get a free API key from https://aistudio.google.com
+3. Paste your key into the `GeminiApiKey` value in `Secrets.cs`
